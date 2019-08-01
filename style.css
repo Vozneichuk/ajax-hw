@@ -72,15 +72,13 @@ body {
   display: flex;
   justify-content: space-around;
 }
-#output button:active{
-  background: rgb(35, 190, 178);
 
 }
 .form button:active{
   background: rgb(187, 83, 190);
 
 }
-.user{
+#output div  {
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -89,4 +87,19 @@ body {
   background: rgb(108, 182, 224);
   border-radius: 5px;
   margin: 0px 16px 8px;
+}
+#output div h2{
+  text-decoration: none;
+  font-size: 18px;
+  text-transform: uppercase;
+  color: rgb(156, 102, 143);
+  padding: 8px;
+  border: 3px solid rgb(100, 134, 165);
+  border-radius: 6px;
+}
+.delete{
+  font-weight: bold;
+}
+.change{
+  font-weight: bold;
 }

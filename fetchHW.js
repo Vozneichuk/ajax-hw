@@ -2,8 +2,8 @@ const API = 'https://test-users-api.herokuapp.com/users/';
 const userName = document.getElementById('name');
 const userAge = document.getElementById('age');
 const btnAdd = document.getElementById('add').addEventListener('click', addUsers)
-let users = []
 const output = document.getElementById('output');
+let users = []
 
 const getUsers = () => {
   return fetch(API)
@@ -12,20 +12,23 @@ const getUsers = () => {
 }
 getUsers().then(res =>{
   users = res.data;
-  console.log(users);
   showUsers();
 });
 
-async function deleteUser(id) {
+async function deleteUser(event) {
+  const id = event.target.parentElement.id;
+  const userCard = event.target.parentElement;
   await fetch(API + id, {
     method: 'DELETE'
-  })
-  users = users.filter((user) => user.id !== id);
-  showUsers();
-  console.log('deleted')
+  });
+  document.querySelector("#output").removeChild(userCard);
+  return;
 }
 
-async function changeUsers(id, changeName, changeAge){
+async function changeUsers(event){
+  const id = event.target.parentElement.id;
+  const changeName = event.path[1].children[1].value
+  const changeAge = event.path[1].children[2].value
   const user = {
     name: changeName,
     age: changeAge
@@ -37,12 +40,6 @@ async function changeUsers(id, changeName, changeAge){
     },
     body:JSON.stringify(user)
   })
-  getUsers()
-  .then(res =>{
-    users = res.data;
-    showUsers()
-  })
-  console.log('changed')
 }
 
 function addUsers(){
@@ -67,62 +64,22 @@ function addUsers(){
 }
 
 function showUsers(){
-  output.innerHTML = '';
-  users.forEach((user) =>{
-    const div = document.createElement('div')
-    div.className ='user'
-
-    const btn = document.createElement('div');
-    btn.className = 'btn';
-
-    const inputName = document.createElement('input');
-    inputName.className = 'inputName';
-    inputName.defaultValue = user.name;
-
-    const inputAge = document.createElement('input')
-    inputAge.className = 'inputAge';
-    inputAge.defaultValue = user.age;
-
-    const btnDel = document.createElement('button')
-    btnDel.className = 'delete'
-    btnDel.textContent = 'Delete'
-    btnDel.addEventListener('click', () => {
-      deleteUser(user.id)
-    })
-    
-    const btnChange = document.createElement('button')
-    btnChange.className = 'change'
-    btnChange.textContent = 'Change'
-    btnChange.addEventListener('click', () => {
-      changeUsers(user.id, inputName.value, inputAge.value)
-    })
-
-    output.append(div);
-    div.append(inputName);
-    div.append(inputAge);
-    btn.append(btnDel);
-    btn.append(btnChange);
-    div.append(btn);
-  })
+  fetch(API)
+    .then((res) =>  res.json())
+    .then((data) => {
+    const cardContainer = document.getElementById('output');
+    data.data.forEach(function(user){
+      let output =`
+          <div id=${user.id}>
+            <h2>USER</h2>
+            <input class="name" placeholder=${user.name}>
+            <input class="age" placeholder=${user.age}>
+            <input type="button" class="delete" onclick ="deleteUser(event)" value="DELETE">
+            <input type="button" class="change" onclick ="changeUsers(event)" value="CHANGE">
+          </div>
+        `;
+        cardContainer.innerHTML += output;
+      });
+  });
 }
-
-
-// function showUsers(){
-//   fetch(API)
-//   .then((res) =>  res.json())
-//   .then((data) => {
-//     let output = '<h2>USERS</h2>';
-//     users.forEach(function(user){
-//       output +=`
-//       <input placeholder=${user.name}>
-//       <input placeholder=${user.age}>
-//       <input type="button" class="delete" onclick ="deleteUser()" value="DELETE">
-//       <input type="button" class="change" onclick ="changeUsers()" value="CHANGE">
-
-//       `;
-//     })  
-//     document.getElementById('output').innerHTML = output  
-//   })
-// }
-
 
