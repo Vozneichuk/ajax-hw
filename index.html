@@ -10,11 +10,10 @@
 <body>
   <div class="container">
     <form class='form'>
-      <label for="user-name"></label>
       <input type="text" id='name' placeholder="Name">
-      <label for="user-age"></label>
       <input type="number" id='age' placeholder="Age">
       <button type='button' id="add">ADD</button>
+      <button type="button" id="clear" onclick="this.form.reset()">CLEAR</button>
     </form>
       <div id='output'></div>
   </div>
